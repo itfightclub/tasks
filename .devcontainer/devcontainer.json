@@ -1,0 +1,38 @@
+{
+  "name": "tasks",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+  "remoteUser": "tasks",
+  "workspaceFolder": "/workspace",
+
+  // --------------------------------------------------------
+  // Attach a **named** volume that will always have the same
+  // identifier.  Users do not need to manage volumes manually;
+  // Docker/Podman creates it on first run and re‑uses it thereafter.
+  // --------------------------------------------------------
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "-v", "tasks_home:/home/tasks"
+  ],
+
+  // --------------------------------------------------------
+  // Bind‑mount the repository itself as the workspace.
+  // This gives the container a live view of the source code.
+  // --------------------------------------------------------
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+
+  // --------------------------------------------------------
+  // Install the official Go extension for language‑server features.
+  // Use the customizations.vscode.extensions path instead of top-level "extensions".
+  // --------------------------------------------------------
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}

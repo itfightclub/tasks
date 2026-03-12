@@ -3,6 +3,7 @@ SPDX-License-Identifier: MIT
 SPDX-FileCopyrightText: C 2026 https://github.com/itfightclub
 cmd/delete.go
 */
+
 package cmd
 
 import (
@@ -14,13 +15,8 @@ import (
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "A brief description of your command", // TODO
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Delete/remove a task",
+	// TODO - finish delete command
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("delete called")
 	},

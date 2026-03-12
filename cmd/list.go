@@ -3,6 +3,7 @@ SPDX-License-Identifier: MIT
 SPDX-FileCopyrightText: C 2026 https://github.com/itfightclub
 cmd/list.go
 */
+
 package cmd
 
 import (
@@ -14,13 +15,8 @@ import (
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command", // TODO
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "List out all tasks status",
+	// TODO - finish list command
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("list called")
 	},

@@ -3,6 +3,7 @@ SPDX-License-Identifier: MIT
 SPDX-FileCopyrightText: C 2026 https://github.com/itfightclub
 cmd/version.go
 */
+
 package cmd
 
 import (
@@ -12,7 +13,7 @@ import (
 )
 
 // Meant to be the source of truth
-const Version = "0.1.0-dev"
+const Version = "0.2.0-dev"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{

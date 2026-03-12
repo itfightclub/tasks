@@ -3,39 +3,40 @@ SPDX-License-Identifier: MIT
 SPDX-FileCopyrightText: C 2026 https://github.com/itfightclub
 cmd/add.go
 */
+
 package cmd
 
 import (
-	"fmt"
+	"time"
 
+	"github.com/itfightclub/tasks/internal"
 	"github.com/spf13/cobra"
 )
 
-// addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "A brief description of your command", // TODO
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "add <task>",
+	Short: "Add a new task (max length: 60 characters)",
+	Long:  "Add a new task with the specified name. The task name must not exceed 60 characters",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		newTask := internal.Task{
+			Name:    args[0],
+			Created: time.Now(),
+			Done:    false,
+		}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		// TODO - use common access config file (csv) instead of making new
+		taskList := internal.TaskList{}
+		err := taskList.AddTask(newTask)
+		if err != nil {
+			return err
+		}
+		time.Sleep(5 * time.Second)
+		taskList.ViewTasks()
+		return nil
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

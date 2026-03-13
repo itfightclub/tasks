@@ -43,7 +43,7 @@ func (tl *TaskList) DeleteTask(index int) {
 	}
 }
 
-func (tl TaskList) ViewTasks() {
+func (tl TaskList) ListTasks() {
 	if len(tl.Tasks) == 0 {
 		fmt.Println("No tasks available.")
 		return

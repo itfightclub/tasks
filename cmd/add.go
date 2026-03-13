@@ -7,6 +7,7 @@ cmd/add.go
 package cmd
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/itfightclub/tasks/internal"
@@ -19,20 +20,43 @@ var addCmd = &cobra.Command{
 	Long:  "Add a new task with the specified name. The task name must not exceed 60 characters",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// Get the tasks file path from the persistent flag
+		tasksFile, err := cmd.Flags().GetString("config")
+		if err != nil {
+			return fmt.Errorf("failed to get config file: %w", err)
+		}
+
+		// Load existing tasks from CSV
+		taskList, err := internal.LoadTasks(tasksFile)
+		if err != nil {
+			return fmt.Errorf("failed to load tasks: %w", err)
+		}
+
+		// Create new task
 		newTask := internal.Task{
 			Name:    args[0],
 			Created: time.Now(),
 			Done:    false,
 		}
 
-		// TODO - use common access config file (csv) instead of making new
-		taskList := internal.TaskList{}
-		err := taskList.AddTask(newTask)
-		if err != nil {
-			return err
+		// Add the new task
+		if err := taskList.AddTask(newTask); err != nil {
+			return fmt.Errorf("Failed to add task: %w", err)
 		}
-		time.Sleep(5 * time.Second)
-		taskList.ViewTasks()
+
+		// Save updated task list back to CSV
+		if err := internal.SaveTasks(tasksFile, taskList); err != nil {
+			return fmt.Errorf("failed to save tasks: %w", err)
+		}
+
+		// Show confirmation
+		fmt.Printf("Tasks added successfully: %s\n", newTask.Name)
+
+		// Optionally show all tasks
+		if verbose {
+			taskList.ListTasks()
+		}
+
 		return nil
 	},
 }

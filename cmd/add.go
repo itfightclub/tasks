@@ -26,6 +26,12 @@ var addCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config file: %w", err)
 		}
 
+		// Get verbosity
+		verbose, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			return fmt.Errorf("failed to get verbosity flag: %v", verbose)
+		}
+
 		// Load existing tasks from CSV
 		taskList, err := internal.LoadTasks(tasksFile)
 		if err != nil {
@@ -50,11 +56,8 @@ var addCmd = &cobra.Command{
 		}
 
 		// Show confirmation
-		fmt.Printf("Tasks added successfully: %s\n", newTask.Name)
-
-		// Optionally show all tasks
 		if verbose {
-			taskList.ListTasks()
+			fmt.Printf("Tasks added successfully: %s\n", newTask.Name)
 		}
 
 		return nil

@@ -27,6 +27,12 @@ var deleteCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config flag: %w", err)
 		}
 
+		// Get verbosity
+		verbose, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			return fmt.Errorf("failed to get verbosity flag: %v", verbose)
+		}
+
 		// Parse the task ID
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
@@ -59,7 +65,9 @@ var deleteCmd = &cobra.Command{
 		}
 
 		// Show confirmation
-		fmt.Printf("Task %d deleted: %s\n", id, taskName)
+		if verbose {
+			fmt.Printf("Task %d deleted: %s\n", id, taskName)
+		}
 
 		return nil
 	},

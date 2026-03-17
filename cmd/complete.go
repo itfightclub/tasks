@@ -27,6 +27,12 @@ var completeCmd = &cobra.Command{
 			return fmt.Errorf("failed to get config flag: %w", err)
 		}
 
+		// Get the verbosity persistent flag
+		verbose, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			return fmt.Errorf("failed to get verbose flag: %w", err)
+		}
+
 		// Parse the task ID
 		id, err := strconv.Atoi(args[0])
 		if err != nil {
@@ -61,7 +67,9 @@ var completeCmd = &cobra.Command{
 		}
 
 		// Show confirmation
-		fmt.Printf("Task %d marked as complete: %s\n", id, taskList.Tasks[index].Name)
+		if verbose {
+			fmt.Printf("Task %d marked as complete: %s\n", id, taskList.Tasks[index].Name)
+		}
 
 		return nil
 	},

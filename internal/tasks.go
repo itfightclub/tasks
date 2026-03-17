@@ -43,7 +43,7 @@ func (tl *TaskList) DeleteTask(index int) {
 	}
 }
 
-func (tl TaskList) ListTasks() {
+func (tl TaskList) ListTasks(all bool) {
 	if len(tl.Tasks) == 0 {
 		fmt.Println("No tasks available.")
 		return
@@ -53,6 +53,9 @@ func (tl TaskList) ListTasks() {
 
 	// Iterate tasks
 	for i, t := range tl.Tasks {
+		if t.Done && !all {
+			continue
+		}
 		createdDuration := durationToString(time.Since(t.Created))
 		fmt.Printf("%-5d %-60s %-20s %-5t\n", i+1, t.Name, createdDuration, t.Done)
 	}

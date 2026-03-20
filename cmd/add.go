@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add <task>",
 	Short: "Add a new task (max length: 60 characters)",

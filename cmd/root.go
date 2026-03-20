@@ -18,6 +18,7 @@ var (
 	verbose   bool
 )
 
+// rootCmd represents the root of the CLI
 var rootCmd = &cobra.Command{
 	Use:   "tasks",
 	Short: "A Todo CLI App",

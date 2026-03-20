@@ -8,21 +8,26 @@ package internal
 
 import (
 	"fmt"
+	"os"
+	"text/tabwriter"
 	"time"
 )
 
-const MaxTaskNameLength = 60 // Maximum allowed length for task names
+const MaxTaskNameLength = 80 // Maximum allowed length for task names
 
+// Task is the definition of a task
 type Task struct {
 	Name    string    `csv:"Name"`
 	Created time.Time `csv:"Created"`
 	Done    bool      `csv:"Done"`
 }
 
+// TaskList is a list of tasks
 type TaskList struct {
 	Tasks []Task
 }
 
+// AddTask adds a task to a TaskList
 func (tl *TaskList) AddTask(newTask Task) error {
 	if len(newTask.Name) > MaxTaskNameLength {
 		return fmt.Errorf("task name exceeds maximum length of %d characters", MaxTaskNameLength)
@@ -31,25 +36,32 @@ func (tl *TaskList) AddTask(newTask Task) error {
 	return nil
 }
 
+// MarkDone marks a task as done
 func (tl *TaskList) MarkDone(index int) {
 	if index >= 0 && index < len(tl.Tasks) {
 		tl.Tasks[index].Done = true
 	}
 }
 
+// DeleteTask deletes a task
 func (tl *TaskList) DeleteTask(index int) {
 	if index >= 0 && index < len(tl.Tasks) {
 		tl.Tasks = append(tl.Tasks[:index], tl.Tasks[index+1:]...)
 	}
 }
 
+// ListTasks lists all the tasks in a TaskList
 func (tl TaskList) ListTasks(all bool) {
 	if len(tl.Tasks) == 0 {
 		fmt.Println("No tasks available.")
 		return
 	}
+
+	// Create tab writer
+	w := tabwriter.NewWriter(os.Stdout, 4, 4, 4, ' ', 0)
+
 	// Print header
-	fmt.Printf("%-5s %-60s %-20s %-5s\n", "ID", "Task", "Created", "Done")
+	fmt.Fprintln(w, "ID\tTask\tCreated\tDone")
 
 	// Iterate tasks
 	for i, t := range tl.Tasks {
@@ -57,7 +69,12 @@ func (tl TaskList) ListTasks(all bool) {
 			continue
 		}
 		createdDuration := durationToString(time.Since(t.Created))
-		fmt.Printf("%-5d %-60s %-20s %-5t\n", i+1, t.Name, createdDuration, t.Done)
+		fmt.Fprintf(w, "%d\t%s\t%s\t%t\n", i+1, t.Name, createdDuration, t.Done)
+	}
+
+	// Flush the writer to ensure the output is displayed
+	if err := w.Flush(); err != nil {
+		fmt.Println("Error flushing writer:", err)
 	}
 }
 

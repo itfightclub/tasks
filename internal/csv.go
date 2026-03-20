@@ -17,7 +17,8 @@ import (
 	"time"
 )
 
-// LoadTasks reads tasks from a CSV file and returns a TaskList
+// LoadTasks reads tasks from a CSV file and returns a TaskList.
+// If the file doesn't exist, it will create it.
 func LoadTasks(filename string) (*TaskList, error) {
 	file, err := os.Open(filename)
 	if err != nil {
